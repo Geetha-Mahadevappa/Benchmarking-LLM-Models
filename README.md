@@ -1,5 +1,3 @@
-Here’s your **clean, ready-to-use** version of the project’s main `README.md` file — with all the diff `+` markers removed and formatting preserved:
-
 ```markdown
 # Benchmarking-LLM-Models
 
@@ -135,7 +133,4 @@ We welcome contributions that add new tasks, new frameworks, better reporting, o
 This project is released under the [MIT License](LICENSE).
 
 ```
-
-✅ **Save as:** `README.md`  
-This provides a complete and professional overview of the **Benchmarking-LLM-Models** toolkit — covering installation, configuration, usage, example metrics, and contribution guidelines.
 ```
