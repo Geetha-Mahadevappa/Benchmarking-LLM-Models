@@ -1,136 +1,165 @@
 ```markdown
-# Benchmarking-LLM-Models
+# 🚀 Benchmarking-LLM-Models
 
-Benchmarking-LLM-Models is a toolkit for evaluating large language models (LLMs) with three of the most widely-used benchmarking frameworks: **OpenAI Evals**, **HELM**, and **LM Eval Harness**. The project provides a unified workflow, curated task configurations, and reporting utilities so that practitioners can compare models across reasoning, bias, robustness, and efficiency dimensions in a reproducible way.
+**Benchmarking-LLM-Models** is a unified, lightweight toolkit for evaluating and comparing large language models (LLMs)
+using three major benchmarking ecosystems:  
+**[OpenAI Evals](https://github.com/openai/evals)** · **[HELM](https://github.com/stanford-crfm/helm)** ·
+**[LM Evaluation Harness](https://github.com/EleutherAI/lm-evaluation-harness)**
 
-## Features
+It provides a single, reproducible workflow to test reasoning, bias, safety, and performance characteristics
+of any model — from API-hosted systems to local open-weights models.
 
-- Shared environment specification and install scripts to get the three benchmarking suites running together.
-- Pre-populated configuration templates for common tasks in OpenAI Evals, HELM, and LM Eval Harness.
-- A harmonized results schema that lets you track metrics across tasks and frameworks.
-- Automation helpers to orchestrate multiple benchmark runs and aggregate their outputs into a single report.
+## ✨ Key Features
 
-## Project Layout
+- 🧩 **Unified Workflow** – Run benchmarks from multiple frameworks through one CLI interface.
+- ⚙️ **Pre-configured Templates** – Ready-to-run configs for MMLU, GSM8K, HELM Core, and more.
+- 📊 **Cross-Framework Reporting** – Aggregate metrics (accuracy, perplexity, bias, etc.) in one schema.
+- 🧠 **Automation Helpers** – A single script orchestrates runs, saves outputs, and summarizes results.
+- 🪶 **Lightweight Design** – No monolithic dependencies; uses each framework’s native runner.
 
-```
+## 📁 Project Layout
 
 .
 ├── helm/                # HELM scenarios, configs, and adapters
-├── lm_eval/             # LM Eval Harness task configs and wrapper scripts
-├── openai_evals/        # OpenAI Evals templates and prompt sets
-├── scripts/             # Automation scripts for running and aggregating benchmarks
-├── requirements.txt     # Minimal shared dependencies for helper utilities
-└── README.md            # Project overview and usage instructions
+├── lm_eval/             # LM Eval Harness configs and optional checkpoints
+├── openai_evals/        # OpenAI Evals templates and prompt assets
+├── scripts/             # Automation and summary utilities
+├── .env.example         # Environment variable template
+├── requirements.txt     # Minimal helper dependencies
+└── README.md            # You are here!
 
+## ⚡ Quickstart
+
+### 1. Set up environment
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
 ````
 
-## Quickstart
+### 2. Install the benchmarking frameworks
 
-1. **Create and activate a virtual environment**
+Follow their official guides:
 
-   ```bash
-   python -m venv .venv
-   source .venv/bin/activate
-````
+* 🧠 [OpenAI Evals](https://github.com/openai/evals)
+* 🧩 [HELM](https://github.com/stanford-crfm/helm)
+* 📐 [LM Eval Harness](https://github.com/EleutherAI/lm-evaluation-harness)
 
-2. **Install shared helper dependencies** (the benchmarking frameworks should be installed following their upstream documentation):
+### 3. Add your API keys
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+Copy `.env.example` → `.env` and fill in the appropriate keys:
 
-3. **Install each benchmarking framework**
+```bash
+cp .env.example .env
+```
 
-   * [OpenAI Evals](https://github.com/openai/evals)
-   * [HELM](https://github.com/stanford-crfm/helm)
-   * [LM Eval Harness](https://github.com/EleutherAI/lm-evaluation-harness)
+### 4. Run your first benchmark
 
-4. **Run a benchmark** using the helper script:
+Example (OpenAI Evals + MMLU):
 
-   ```bash
-   python scripts/run_benchmarks.py --tool openai-evals --config openai_evals/configs/mmlu.yaml
-   ```
+```bash
+python scripts/run_benchmarks.py run \
+  --tool openai-evals \
+  --config openai_evals/configs/mmlu.yaml
+```
 
-   Replace `--tool` and `--config` with the framework and config you want to run.
+### 5. Summarize results
 
-5. **Aggregate results** generated in `artifacts/` by running:
+```bash
+python scripts/run_benchmarks.py summarize artifacts/
+```
 
-   ```bash
-   python scripts/run_benchmarks.py summarize artifacts/
-   ```
+---
 
-## Benchmarking Tables
+## 📊 Example Benchmark Tables
 
-The following tables summarize example benchmark runs for popular LLMs across the three supported tools. Metrics are illustrative and should be regenerated for your specific models and task setups.
+Below are **illustrative metrics** showing how to report results (replace with your actual outputs):
 
-### OpenAI Evals
+### 🧪 OpenAI Evals
 
-| Model          | Task Suite        | Accuracy (%) | Calibration (ECE) | Notes                                  |
-| -------------- | ----------------- | ------------ | ----------------- | -------------------------------------- |
-| GPT-4o         | MMLU (STEM focus) | 83.5         | 0.07              | Few-shot prompts from `mmlu.yaml`      |
-| Claude 3 Opus  | GSM8K             | 90.2         | 0.05              | Uses `gsm8k_cot.yaml` prompt template  |
-| Gemini 1.5 Pro | TruthfulQA        | 75.1         | 0.09              | Eval with hallucination audit disabled |
-| Llama 3 70B    | Codebench         | 64.3         | 0.12              | Requires quantized deployment backend  |
+| Model          | Task Suite  | Accuracy (%) | ECE ↓ | Notes                             |
+| -------------- | ----------- | ------------ | ----- | --------------------------------- |
+| GPT-4o         | MMLU (STEM) | **83.5**     | 0.07  | Few-shot prompts from `mmlu.yaml` |
+| Claude 3 Opus  | GSM8K       | 90.2         | 0.05  | Chain-of-thought enabled          |
+| Gemini 1.5 Pro | TruthfulQA  | 75.1         | 0.09  | Hallucination audit disabled      |
+| Llama 3 70B    | CodeBench   | 64.3         | 0.12  | Quantized inference backend       |
 
-### HELM
+### 🧭 HELM
 
-| Model            | Scenario Bundle | Exact Match (%) | Robustness Δ | Bias Score ↓ | Notes                               |
-| ---------------- | --------------- | --------------- | ------------ | ------------ | ----------------------------------- |
-| GPT-4o           | HELM++ Core     | 71.8            | -3.4         | 0.18         | Run with `helm/scenarios/core.json` |
-| Claude 3 Sonnet  | Safety Red Team | 63.5            | -1.1         | 0.11         | Safety filter enabled               |
-| Gemini 1.5 Flash | SummEval        | 54.2            | -5.3         | 0.22         | Summaries benchmark                 |
-| Llama 3 8B       | MATH            | 38.7            | -6.5         | 0.27         | Needs custom inference wrapper      |
+| Model            | Scenario Bundle | Exact Match (%) | Robustness Δ | Bias ↓ | Notes                             |
+| ---------------- | --------------- | --------------- | ------------ | ------ | --------------------------------- |
+| GPT-4o           | HELM Core       | 71.8            | -3.4         | 0.18   | Run with `helm/configs/core.json` |
+| Claude 3 Sonnet  | Safety Red Team | 63.5            | -1.1         | 0.11   | Safety filter enabled             |
+| Gemini 1.5 Flash | SummEval        | 54.2            | -5.3         | 0.22   | Summaries benchmark               |
+| Llama 3 8B       | MATH            | 38.7            | -6.5         | 0.27   | Custom inference wrapper required |
 
-### LM Eval Harness
+### 📐 LM Eval Harness
 
-| Model           | Task Group    | Metric (↑)  | Score | Context Length | Notes                                       |
-| --------------- | ------------- | ----------- | ----- | -------------- | ------------------------------------------- |
-| GPT-4o Mini     | hellaswag     | Acc.        | 88.6  | 8K             | `--fewshot 5`                               |
-| Claude 3 Haiku  | winogrande    | Acc.        | 86.4  | 4K             | Run with `--batch_size 16`                  |
-| Gemini 1.5 Nano | arc_challenge | Acc.        | 54.9  | 32K            | Demonstrates long-context capability        |
-| Llama 3 70B     | gsm8k         | Exact Match | 61.7  | 16K            | Requires LoRA fine-tuned checkpoint adapter |
+| Model           | Task Group    | Metric (↑)  | Score | Context | Notes                              |
+| --------------- | ------------- | ----------- | ----- | ------- | ---------------------------------- |
+| GPT-4o Mini     | HellaSwag     | Acc.        | 88.6  | 8K      | `--fewshot 5`                      |
+| Claude 3 Haiku  | Winogrande    | Acc.        | 86.4  | 4K      | `--batch_size 16`                  |
+| Gemini 1.5 Nano | ARC Challenge | Acc.        | 54.9  | 32K     | Tests long-context handling        |
+| Llama 3 70B     | GSM8K         | Exact Match | 61.7  | 16K     | LoRA fine-tuned checkpoint adapter |
 
-> **Note:** These metrics are illustrative placeholders designed to show how results should be reported. Replace them with real measurements from your evaluation runs.
+> 📝 *These values are placeholders for formatting illustration. Always replace with your measured results.*
 
-## Configurations
+---
 
-Each framework ships with its own configuration format. The repository includes ready-to-edit templates:
+## ⚙️ Configuration Overview
 
-* `openai_evals/configs/` – YAML files referencing prompt templates, completion parameters, and dataset shards.
-* `helm/configs/` – Scenario JSON files plus runner overrides.
-* `lm_eval/configs/` – Harness-compatible YAML/JSON configs for multi-task sweeps.
+| Framework           | Config Format | Directory               | Example         |
+| ------------------- | ------------- | ----------------------- | --------------- |
+| **OpenAI Evals**    | YAML          | `openai_evals/configs/` | `mmlu.yaml`     |
+| **HELM**            | JSON          | `helm/configs/`         | `core.json`     |
+| **LM Eval Harness** | YAML / JSON   | `lm_eval/configs/`      | `math_gsm.yaml` |
 
-Adjust the model provider, API keys, and inference parameters according to your infrastructure. Environment variables are preferred for secrets; see `.env.example` for guidance.
+All configurations support environment variable substitution (API keys, model endpoints, etc.).
+See `.env.example` for the canonical list of supported variables.
 
-## Automation Helpers
+---
 
-`scripts/run_benchmarks.py` provides a thin wrapper that standardizes command-line arguments and output locations. It logs every run to `artifacts/{tool}/{timestamp}/` and optionally pushes metrics to a SQLite database for later analysis.
+## 🤖 Automation & Reporting
+
+`scripts/run_benchmarks.py` standardizes all runs:
+
+* 🏃 `run` — Executes a benchmark via one of the supported tools.
+* 📈 `summarize` — Recursively scans artifacts and aggregates numeric metrics.
+
+Every execution is logged under:
+
+```
+artifacts/{tool}/{timestamp}/
+```
 
 Example combined workflow:
 
 ```bash
-# Run HELM with the provided config
-python scripts/run_benchmarks.py --tool helm --config helm/configs/core.json --model gpt-4o
+# Run HELM
+python scripts/run_benchmarks.py run --tool helm --config helm/configs/core.json --model gpt-4o
 
-# Run LM Eval Harness across multiple tasks
-auto-task-runner --config lm_eval/configs/math_gsm.yaml --model llama-3-70b
+# Run LM Eval Harness
+python scripts/run_benchmarks.py run --tool lm-eval --config lm_eval/configs/math_gsm.yaml --model llama-3-70b
 
-# Summarize results from both runs
+# Summarize both
 python scripts/run_benchmarks.py summarize artifacts/
 ```
 
-## Contributing
+---
 
-1. Fork the repository and create a new branch for your feature.
-2. Add or update configuration templates and helper utilities.
-3. Update the documentation, including benchmark tables, to reflect your changes.
-4. Submit a pull request describing the evaluations performed.
+## 🧩 Extending the Toolkit
 
-We welcome contributions that add new tasks, new frameworks, better reporting, or integrations with emerging LLM evaluation suites.
+You can easily add:
 
-## License
+* 🧠 New tasks (JSON/YAML configs)
+* 🧰 New frameworks (add to `TOOL_COMMANDS` in `scripts/run_benchmarks.py`)
+* 📊 New metrics or visualization modules
 
-This project is released under the [MIT License](LICENSE).
+For example, to add a new benchmark framework:
+
+1. Define its CLI executable and flags in `TOOL_COMMANDS`.
+2. Drop configs under a new subfolder (e.g., `new_framework/configs/`).
+3. Reuse `run_benchmarks.py` to orchestrate runs and summaries.
 
 ```
 ```
