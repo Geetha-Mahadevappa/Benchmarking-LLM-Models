@@ -1,0 +1,20 @@
+# Example OpenAI Evals configuration for the MMLU benchmark
+completion_fns:
+  - id: gpt-4o
+    params:
+      temperature: 0.0
+      max_tokens: 256
+
+datasets:
+  - id: mmlu
+    args:
+      task: stem
+      few_shot: 5
+      eval_type: completion
+
+run_spec:
+  max_examples: null
+  sample_jsonl: outputs/mmlu_gpt4o.jsonl
+  eval_params:
+    max_tokens: 256
+    temperature: 0.0
