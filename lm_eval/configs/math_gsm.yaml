@@ -1,0 +1,18 @@
+# LM Eval Harness multi-task configuration for math reasoning benchmarks
+model: gpt-4o-mini
+batch_size: 16
+max_length: 4096
+precision: fp16
+
+tasks:
+  - name: gsm8k
+    shots: 8
+  - name: math_algebra
+    shots: 4
+    args:
+      split: test
+      level: medium
+
+output:
+  path: outputs/lm_eval/gpt4o_maths
+  format: json
