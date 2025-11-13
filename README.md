@@ -194,6 +194,3 @@ To add a new benchmarking framework:
 * **Authentication errors** – Confirm credentials are exported in your shell session or configured in the framework-specific secrets store.
 * **No metrics found** – Ensure the artifact directory contains JSON, JSONL, or YAML files with numeric fields. Non-numeric metrics are ignored by the summarizer.
 ```
-
-Would you like me to make this version **GitHub-rendered optimized** (adds badges, better TOC links, and collapsible sections for examples)? It can make your README more visually professional.
-```
